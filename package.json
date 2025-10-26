@@ -1,0 +1,13 @@
+{
+  "name": "online_exam_portal",
+  "version": "1.0.0",
+  "description": "This is panel for online exam ",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev" : "node --watch --env-file=.env app.js"
+  },
+  "author": "Sumit Pathak",
+  "license": "ISC"
+}
