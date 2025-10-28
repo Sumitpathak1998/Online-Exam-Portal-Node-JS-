@@ -1,6 +1,4 @@
-import { loadRegisterStudent , saveRegisterStudent } from "../model/register.model.js";
-
-const checkEmailDuplicate = (current_email,emailList) => emailList.includes(current_email);
+import { loadRegisterStudent , saveRegisterStudent , checkEmailDuplicate } from "../model/register.model.js";
 
 /**
  * Process for register the student 
@@ -17,18 +15,20 @@ export const submitAndValidateRegisterStudent = async (req,res) => {
     });  
     req.on("end" , async () => {
         let student = JSON.parse(body);
-        const emailList = Object.values(registerStudentList).map((param) => param.email);
-        if(checkEmailDuplicate(student.email,emailList)) {
+        let checkEmailResponse = await checkEmailDuplicate(student.email);
+        if(!checkEmailResponse.success) {
             res.writeHead(403,{"content-type":"text/plain"});
-            return res.end("This email already register");
+            return res.end(checkEmailResponse.message);
         }
 
-        let studentKey = student.name.split(" ").join("_");
-        registerStudentList[studentKey] = student;
-        await saveRegisterStudent(registerStudentList);
-
-        res.writeHead(200,{"content-type":"application/json"});
-        return res.end(JSON.stringify({success : true , message : `${student.name} Registerd Successfully`}));
+        const resposne = await saveRegisterStudent(student);
+        if (resposne.success) {
+            res.writeHead(200,{"content-type":"application/json"});
+            return res.end(JSON.stringify({success : true , message : `${student.name} Registerd Successfully`}));
+        } else {
+            res.writeHead(403,{"content-type":"text/plain"});
+            return res.end(resposne.message);
+        }
     })
 }
 

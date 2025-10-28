@@ -66,8 +66,7 @@
             let response = await postFormWithFetch({email,password});
             if(typeof(response) == "object" && response != null) {
                 alert(response.message);
-                let username = response.user.split(" ").join("_");
-                window.location.href = `/home/${username}`;
+                window.location.href = `/home/${response.user_id}`;
             } else {
                 alert(response);
             }

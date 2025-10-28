@@ -6,8 +6,11 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev" : "node --watch --env-file=.env app.js"
+    "dev": "node --watch --env-file=.env app.js"
   },
   "author": "Sumit Pathak",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "mysql2": "^3.15.3"
+  }
 }
