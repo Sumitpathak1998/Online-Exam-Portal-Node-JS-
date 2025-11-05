@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Subjects</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .header {
+      background: linear-gradient(90deg, #007bff, #00c6ff);
+      color: white;
+      padding: 20px 30px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .header h3 {
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .table thead {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .table tbody tr:hover {
+      background-color: #f1f9ff;
+    }
+
+    .btn-action {
+      border-radius: 25px;
+      font-size: 0.8rem;
+      padding: 4px 10px;
+    }
+
+    .title-section {
+      font-weight: 600;
+      color: #495057;
+      border-left: 5px solid #007bff;
+      padding-left: 10px;
+      margin-bottom: 15px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="container py-4">
+    
+    <!-- Admin Header -->
+    <div class="header d-flex justify-content-between align-items-center">
+      <h3>👨‍💼 Admin: <span id="adminName">Sumit Kumar</span></h3>
+      <button class="btn btn-light btn-sm">Logout</button>
+    </div>
+
+    <!-- Title -->
+    <h4 class="title-section">📘 Available Subjects</h4>
+
+    <!-- Subject Table -->
+    <div class="table-responsive">
+      <table class="table align-middle table-bordered table-hover">
+        <thead class="text-center">
+          <tr>
+            <th>#</th>
+            <th>Subject Name</th>
+            <th>Code</th>
+            <th>Max Marks</th>
+            <th>Time Duration</th>
+            <th>Total Questions</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="subjectTable">
+          <!-- Data dynamically added -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Example data
+    const subjects = [
+      { name: "Java", code: "JV101", marks: 100, duration: "1 hr", totalQ: 50 },
+      { name: "JavaScript", code: "JS102", marks: 100, duration: "1 hr", totalQ: 40 },
+      { name: "Python", code: "PY103", marks: 100, duration: "1.5 hr", totalQ: 60 },
+      { name: "C++", code: "CP104", marks: 80, duration: "45 min", totalQ: 35 },
+    ];
+
+    const table = document.getElementById("subjectTable");
+
+    subjects.forEach((sub, index) => {
+      const row = document.createElement("tr");
+      row.classList.add("text-center");
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${sub.name}</td>
+        <td>${sub.code}</td>
+        <td>${sub.marks}</td>
+        <td>${sub.duration}</td>
+        <td>${sub.totalQ}</td>
+        <td>
+          <button class="btn btn-sm btn-outline-primary btn-action">Edit</button>
+          <button class="btn btn-sm btn-outline-danger btn-action">Delete</button>
+        </td>
+      `;
+      table.appendChild(row);
+    });
+  </script>
+
+</body>
+</html>

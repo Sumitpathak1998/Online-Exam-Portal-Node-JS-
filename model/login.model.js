@@ -15,13 +15,15 @@ const serverFile = async (req,res,content_type,folderPath) => {
 
 export const checkLoginDetails = async (loginDetails) => {
     try{
-        const [db_res] = await db.execute("select id from `student` where student_email = ? and password = ?" , [loginDetails.email, loginDetails.password]);
+        const [db_res] = await db.execute(`select id from ${loginDetails.login_type} where email = ? and password = ?` , [loginDetails.email, loginDetails.password]);
         return (db_res.length > 0) ? {success : true , user_id : db_res[0].id} : {success : false , message : "Credential Not Matched"};
     }catch(error) {
         return {success : false , message : error.message};
     }
 }
 
-export const loginReadFile = (req,res) => {serverFile(req,res,"text/html",path.join("views","login.html"))}
+export const loginReadFile = (req,res) => {serverFile(req,res,"text/html",path.join("views","student_login.html"))};
 
-export const registerReadFile = async (req,res) => { serverFile(req,res,"text/html",path.join("views","register.html"))} 
+export const registerReadFile = async (req,res) => { serverFile(req,res,"text/html",path.join("views","register.html"))};
+
+export const adminLoginReadFile = async (req,res) => { serverFile(req,res,"text/html",path.join("views","admin_login.html"))};

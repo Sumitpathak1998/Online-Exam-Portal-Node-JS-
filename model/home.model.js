@@ -12,4 +12,4 @@ const serverFile = async (req,res,content_type,folderPath) => {
     }
 }
 
-export const loadHomePage = (req,res) => serverFile(req,res,"text/html",path.join("views","home.html"));
+export const loadDashBoardPage = (req,res,id,type) => serverFile(req,res,"text/html",path.join("views",`${type}_dashboard.html`));

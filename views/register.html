@@ -38,7 +38,7 @@
             </form>
 
             <div class="text-center mt-3">
-                <small>Already have an account? <a href="/">Login</a></small>
+                <small>Already have an account? <a href="/" id = "return_login">Login</a></small>
             </div>
         </div>
     </div>
@@ -47,6 +47,16 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        let a = document.getElementById("return_login");
+        a.href = (getRegisterType() == 'admin') ? "/admin_login" : "/";
+    });
+
+    const getRegisterType = () => {
+        const current_url = window.location.href;
+        const [register_type] = current_url.split("/").filter((param,index,array) => index == array.length -1)[0].split("_");
+        return register_type;
+    }
     const postFormWithFetch = async(param) => {
         try {
             const response = await fetch("/registerForm" , {
@@ -74,12 +84,12 @@
         const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value;
         const confirmPassword = document.getElementById("confirmPassword").value;
-
+        const register_type  = getRegisterType();
         if (password !== confirmPassword) {
             alert("Passwords do not match!");
             return;
         }
-        const userData = {name,email,password};
+        const userData = {name,email,password,register_type};
         const response = await postFormWithFetch(userData);
         if(typeof(response) == "object" && response != null) {
             alert(response.message);
