@@ -1,119 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard | Subjects</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      background-color: #f8f9fa;
-      font-family: "Poppins", sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Subjects</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: "Poppins", sans-serif;
+        }
 
-    .header {
-      background: linear-gradient(90deg, #007bff, #00c6ff);
-      color: white;
-      padding: 20px 30px;
-      border-radius: 8px;
-      margin-bottom: 25px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
+        .header {
+            background: linear-gradient(90deg, #007bff, #00c6ff);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
 
-    .header h3 {
-      margin: 0;
-      font-weight: 600;
-    }
+        .header h3 {
+            margin: 0;
+            font-weight: 600;
+        }
 
-    .table thead {
-      background-color: #007bff;
-      color: white;
-    }
+        .table thead {
+            background-color: #007bff;
+            color: white;
+        }
 
-    .table tbody tr:hover {
-      background-color: #f1f9ff;
-    }
+        .table tbody tr:hover {
+            background-color: #f1f9ff;
+        }
 
-    .btn-action {
-      border-radius: 25px;
-      font-size: 0.8rem;
-      padding: 4px 10px;
-    }
+        .btn-action {
+            border-radius: 25px;
+            font-size: 0.8rem;
+            padding: 4px 10px;
+        }
 
-    .title-section {
-      font-weight: 600;
-      color: #495057;
-      border-left: 5px solid #007bff;
-      padding-left: 10px;
-      margin-bottom: 15px;
-    }
+        .title-section {
+            font-weight: 600;
+            color: #495057;
+            border-left: 5px solid #007bff;
+            padding-left: 10px;
+            margin-bottom: 15px;
+        }
 
-  </style>
+    </style>
 </head>
 
 <body>
 
-  <div class="container py-4">
-    
-    <!-- Admin Header -->
-    <div class="header d-flex justify-content-between align-items-center">
-      <h3>👨‍💼 Admin: <span id="adminName">Sumit Kumar</span></h3>
-      <button class="btn btn-light btn-sm">Logout</button>
+    <div class="container py-4">
+        
+        <!-- Admin Header -->
+        <div class="header d-flex justify-content-between align-items-center">
+            <h3>👨‍💼 Admin: <span id="adminName">Sumit Kumar</span></h3>
+            <button class="btn btn-light btn-sm">Logout</button>
+        </div>
+
+        <!-- Title -->
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="title-section">Available Subjects</h4>
+            <button type="button" class="btn btn-primary btn-sm" style="margin-top: -5px;" id="add_subject">Add Subject</button>
+        </div>
+
+        <!-- Subject Table -->
+        <div class="table-responsive">
+            <table class="table align-middle table-bordered table-hover">
+                <thead class="table-primary text-center">
+                    <tr>
+                        <th>Sr.No</th>
+                        <th>Subject Name</th>
+                        <th>Code</th>
+                        <th>Max Marks</th>
+                        <th>Time Duration</th>
+                        <th>Total Questions</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="subjectTable"><!-- Data dynamically added --></tbody>
+            </table>
+        </div>
+    </div>
+    <button id="hiddenTrigger" type="button" data-bs-toggle="modal" data-bs-target="#mdModel" hidden></button>
+    <!-- Modal -->
+    <div class="modal fade" id="mdModel" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="main_content"></div>
+        </div>
     </div>
 
-    <!-- Title -->
-    <h4 class="title-section">📘 Available Subjects</h4>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
 
-    <!-- Subject Table -->
-    <div class="table-responsive">
-      <table class="table align-middle table-bordered table-hover">
-        <thead class="text-center">
-          <tr>
-            <th>#</th>
-            <th>Subject Name</th>
-            <th>Code</th>
-            <th>Max Marks</th>
-            <th>Time Duration</th>
-            <th>Total Questions</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="subjectTable">
-          <!-- Data dynamically added -->
-        </tbody>
-      </table>
-    </div>
-  </div>
+        document.addEventListener("DOMContentLoaded", async () => {
+            try {
+                let response = await fetch("/showAllSubject" , {
+                    method : "GET",
+                });
+                if (!response.ok) {
+                    throw new Error("Something went wrong");
+                }
+                let res = await response.json();
+                const subjects = JSON.parse(res.message);
+                const table = document.getElementById("subjectTable");
 
-  <script>
-    // Example data
-    const subjects = [
-      { name: "Java", code: "JV101", marks: 100, duration: "1 hr", totalQ: 50 },
-      { name: "JavaScript", code: "JS102", marks: 100, duration: "1 hr", totalQ: 40 },
-      { name: "Python", code: "PY103", marks: 100, duration: "1.5 hr", totalQ: 60 },
-      { name: "C++", code: "CP104", marks: 80, duration: "45 min", totalQ: 35 },
-    ];
+                subjects.forEach((sub, index) => {
+                    const row = document.createElement("tr");
+                    row.classList.add("text-center");
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${sub.name}</td>
+                        <td>${sub.code}</td>
+                        <td>${sub.max_marks}</td>
+                        <td>${sub.time_duration}</td>
+                        <td>${sub.num_of_question}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" style="color:white !important;">Edit</button>
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </td>
+                    `;
+                    table.appendChild(row);
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        })
 
-    const table = document.getElementById("subjectTable");
 
-    subjects.forEach((sub, index) => {
-      const row = document.createElement("tr");
-      row.classList.add("text-center");
-      row.innerHTML = `
-        <td>${index + 1}</td>
-        <td>${sub.name}</td>
-        <td>${sub.code}</td>
-        <td>${sub.marks}</td>
-        <td>${sub.duration}</td>
-        <td>${sub.totalQ}</td>
-        <td>
-          <button class="btn btn-sm btn-outline-primary btn-action">Edit</button>
-          <button class="btn btn-sm btn-outline-danger btn-action">Delete</button>
-        </td>
-      `;
-      table.appendChild(row);
-    });
-  </script>
+        const getModelContent = async (url) => {
+            try {
+                let response = await fetch(url , {
+                    method : "GET",
+                });
+                if (!response.ok) {
+                    throw new Error("Something went wrong");
+                }
+                let content = await response.text();
+                return content;   
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        const postMethod = async (url,param) => {
+            try {
+                const response = await fetch(url , {
+                    method : "POST" , 
+                    headers : {
+                        "content-type" : "application/json" 
+                    },
+                    body : JSON.stringify(param)
+                });
+                if(!response.ok) {
+                    return await response.text();
+                }
+                const result = await response.json();
+                return result;
+            } catch (error) {
+                console.error(error);
+                return null; 
+            }
+        }
+        document.getElementById("add_subject").addEventListener("click",async () => {
+            const model_data =  await getModelContent("/insertAndUpdateSubject");
+            document.getElementById("main_content").innerHTML = model_data;
+            document.getElementById("hiddenTrigger").click();
+        })
+
+        async function saveOrUpdateSubject(e) {
+            e.preventDefault();
+            const formData = new FormData(document.getElementById("subject_form"));
+            let finalObj = Array.from(formData.entries()).reduce((acc,[key,value]) => {
+                acc[key] = value;
+                return acc;
+            }  , {});
+            const response = await postMethod("/insertOrUpdateSubjectDetails" , finalObj);
+            if (typeof(response) == "object") {
+                document.getElementById("colse_button").click();
+                alert(response.message);
+            } else {
+                alert(response);
+            }
+        }
+
+    </script>
 
 </body>
 </html>

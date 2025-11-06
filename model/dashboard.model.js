@@ -13,3 +13,5 @@ const serverFile = async (req,res,content_type,folderPath) => {
 }
 
 export const loadDashBoardPage = (req,res,id,type) => serverFile(req,res,"text/html",path.join("views",`${type}_dashboard.html`));
+
+export const loadInsertAndUpdateSubjectForm = (req,res) => serverFile(req,res,"text/html",path.join("views","insertAndUpdateSubject.html"));
