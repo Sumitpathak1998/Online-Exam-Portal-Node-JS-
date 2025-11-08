@@ -117,10 +117,10 @@
                         <td>${sub.code}</td>
                         <td>${sub.max_marks}</td>
                         <td>${sub.time_duration}</td>
-                        <td>${sub.num_of_question}</td>
+                        <td>${sub.num_question}</td>
                         <td>
-                            <button class="btn btn-sm btn-warning" style="color:white !important;">Edit</button>
-                            <button class="btn btn-sm btn-danger">Delete</button>
+                            <button id="${sub.id}_edit" class="btn btn-sm btn-warning" style="color:white !important;" onclick = "editSubject(this.id)">Edit</button>
+                            <button id="${sub.id}_delete" class="btn btn-sm btn-danger" onclick = "deleteSubject(this.id)">Delete</button>
                         </td>
                     `;
                     table.appendChild(row);
@@ -137,7 +137,7 @@
                     method : "GET",
                 });
                 if (!response.ok) {
-                    throw new Error("Something went wrong");
+                    throw new Error(response.error);
                 }
                 let content = await response.text();
                 return content;   
@@ -165,11 +165,48 @@
                 return null; 
             }
         }
+
         document.getElementById("add_subject").addEventListener("click",async () => {
             const model_data =  await getModelContent("/insertAndUpdateSubject");
             document.getElementById("main_content").innerHTML = model_data;
             document.getElementById("hiddenTrigger").click();
         })
+
+        async function deleteSubject(button_id) {
+            let userResponse = confirm("Are you sure want to Remove the Subject?");
+            if(userResponse) {
+                const id = button_id.split("_")[0];
+                const response = await postMethod("/deleteSubject" , {id});
+                alert(response.message);
+            } else {
+                console.log("Decline the request");
+            }
+        }
+        async function editSubject(button_id) {
+            let id = button_id.split("_")[0];
+            const model_data =  await getModelContent(`/insertAndUpdateSubject/${id}`);
+            document.getElementById("main_content").innerHTML = model_data;
+            const subject_id = Number (document.getElementById("subject_id").value);
+            if(!isNaN(subject_id)) {
+                fetch(`/subject/${subject_id}`, { 
+                    method : "GET"
+                }).then((res) => res.json()).then((data) => {
+                    if (data.success) {
+                        const subject_data = JSON.parse(data.message);
+                        document.getElementById("name").value = subject_data.name;
+                        document.getElementById("code").value = subject_data.code;
+                        document.getElementById("max_marks").value = subject_data.max_marks;
+                        document.getElementById("time_duration").value = subject_data.time_duration;
+                        document.getElementById("num_question").value = subject_data.num_question;
+                    } else {
+                        alert(data.message);
+                    }
+                }).catch((error) => {
+                    console.log(error);
+                })
+            }
+            document.getElementById("hiddenTrigger").click();
+        }
 
         async function saveOrUpdateSubject(e) {
             e.preventDefault();
@@ -178,6 +215,8 @@
                 acc[key] = value;
                 return acc;
             }  , {});
+            const sub_id = Number (finalObj.subject_id);
+            if(isNaN(sub_id)) delete finalObj.subject_id;
             const response = await postMethod("/insertOrUpdateSubjectDetails" , finalObj);
             if (typeof(response) == "object") {
                 document.getElementById("colse_button").click();
