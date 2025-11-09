@@ -78,6 +78,7 @@
                         <th>Max Marks</th>
                         <th>Time Duration</th>
                         <th>Total Questions</th>
+                        <th>View Queations</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -118,6 +119,9 @@
                         <td>${sub.max_marks}</td>
                         <td>${sub.time_duration}</td>
                         <td>${sub.num_question}</td>
+                        <td>
+                            <button id="${sub.id}_view_question" class="btn btn-sm btn-info" style="color:white !important;" onclick = "viewQuestion(this.id)">View</button>
+                        </td>
                         <td>
                             <button id="${sub.id}_edit" class="btn btn-sm btn-warning" style="color:white !important;" onclick = "editSubject(this.id)">Edit</button>
                             <button id="${sub.id}_delete" class="btn btn-sm btn-danger" onclick = "deleteSubject(this.id)">Delete</button>
@@ -206,6 +210,11 @@
                 })
             }
             document.getElementById("hiddenTrigger").click();
+        }
+
+        function viewQuestion(view_button) {
+            let [subject_id] = view_button.split("_")[0];
+            window.open(`/openQuestionModel/${subject_id}`, "_blank");
         }
 
         async function saveOrUpdateSubject(e) {

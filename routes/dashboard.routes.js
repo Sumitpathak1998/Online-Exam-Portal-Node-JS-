@@ -1,5 +1,6 @@
 import { loadDashBoardPage , loadInsertAndUpdateSubjectForm } from "../model/dashboard.model.js";
 import { insertOrUpdateSubjectDetails , showAllSubject , fetchSubjectDetails , deleteSubject } from "../controller/subject.controller.js";
+import { loadQuestionPage } from "../model/question.model.js";
 
 export const dashboardRoutes = (req,res) => {
     if(req.method == "GET") {
@@ -19,8 +20,13 @@ export const dashboardRoutes = (req,res) => {
         if(req.url.startsWith("/subject")) {
             let id = req.url.split("/").filter((param) => param)[1];
             fetchSubjectDetails(req,res,id);  
+        }
+        if(req.url.startsWith("/openQuestionModel")) {
+            let id = req.url.split("/").filter((param) => param)[1];
+            loadQuestionPage(req,res,id);
         } 
         if(req.url == "/showAllSubject") showAllSubject(req,res);
+        
     }
 
     if (req.method == "POST") {

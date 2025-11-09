@@ -1,0 +1,52 @@
+<div class="container">
+    <div class="modal-header">
+        <h1 class="modal-title fs-5" id="form_heading">Question List</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <form id="question_form" method="post">
+            <div class="row mb-2">
+                <label for="question" class="form-label">Enter Question</label>
+                <textarea class="form-control" id="question" name="question" required></textarea>
+            </div>
+            <div class="row mb-6">
+                <div class="col-sm-6">
+                    <label for="option_1" class="form-label">Option 1</label>
+                    <textarea class="form-control" id="option_1" name="option_1" required></textarea>
+                </div>
+                <div class="col-sm-6">
+                    <label for="option_2" class="form-label">Option 1</label>
+                    <textarea class="form-control" id="option_2" name="option_2" required></textarea>
+                </div>
+            </div>
+            <div class="row mb-6">
+                <div class="col-sm-6">
+                    <label for="option_3" class="form-label">Option 3</label>
+                    <textarea class="form-control" id="option_3" name="option_3" required></textarea>
+                </div>
+                <div class="col-sm-6">
+                    <label for="option_4" class="form-label">Option 4</label>
+                    <textarea class="form-control" id="option_4" name="option_4" required></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <label for="right_option" class="form-label">Right Option</label>
+                    <select name="right_option" id="right_option" class="right_option">
+                        <option value="1">Option 1</option>
+                        <option value="2">Option 2</option>
+                        <option value="3">Option 3</option>
+                        <option value="4">Option 4</option>
+                    </select>
+                </div>
+                <div class="col-sm-6">
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal" id="remove_button">Close</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="colse_button">Close</button>
+        <button type="button" class="btn btn-primary" onclick="saveOrUpdateQuestionList(event)">Save</button>
+    </div>
+</div>
