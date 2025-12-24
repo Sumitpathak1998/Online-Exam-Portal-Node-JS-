@@ -1,4 +1,4 @@
-import { loadDashBoardPage , loadInsertAndUpdateSubjectForm } from "../model/dashboard.model.js";
+import { loadDashBoardPage , loadInsertAndUpdateSubjectForm ,loadStudentDashBoardPage } from "../model/dashboard.model.js";
 import { insertOrUpdateSubjectDetails , showAllSubject , fetchSubjectDetails , deleteSubject } from "../controller/subject.controller.js";
 import { loadQuestionPage } from "../model/question.model.js";
 
@@ -7,7 +7,11 @@ export const dashboardRoutes = (req,res) => {
         if(req.url.includes("dashboard")) {
             let [dashboard_type,id] = req.url.split("/").filter((param) => param);
             const [type] = dashboard_type.split("_");
-            loadDashBoardPage(req,res,id,type); 
+            if (type == "student") {
+                loadStudentDashBoardPage(req,res,id,type);
+            } else {
+                loadDashBoardPage(req,res,id,type);
+            } 
         }
         if(req.url.startsWith("/insertAndUpdateSubject")) {
             const url_arr = req.url.split("/").filter((param) => param);

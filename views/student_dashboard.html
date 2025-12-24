@@ -72,10 +72,11 @@
     
     <!-- Header -->
     <div class="dashboard-header mb-5 d-flex justify-content-between align-items-center flex-wrap">
-      <h3>👨‍🎓 Student: <span id="studentName">Sumit Kumar</span></h3>
+      <h3>👨‍🎓 Student: <span id="studentName">{{student_name}}</span></h3>
+      <input type="text" value="{{student_id}}" id="student_id" style="display: none;">
       <div class="text-end">
-        <h6 class="mb-1">📘 Exams Attempted: <span id="examCount" class="fw-bold">3</span></h6>
-        <h6>📊 Total Percentage: <span id="percentage" class="fw-bold text-warning">82%</span></h6>
+        <h6 class="mb-1">📘 Exams Attempted: <span id="examCount" class="fw-bold">{{numOfattempt}}</span></h6>
+        <h6>📊 Total Percentage: <span id="percentage" class="fw-bold text-warning">{{percentage}}%</span></h6>
       </div>
     </div>
 
@@ -90,6 +91,45 @@
   </div>
 
   <script>
+    const getMethod = async(url,param) => {
+      try {
+        const resposne = await fetch(url , {
+          method : "GET"
+        });
+        console.log("response object details : ",resposne);
+        if(!resposne.ok) {
+          throw new Error(await resposne.json());
+        }
+        const result = await resposne.json();
+        return result; 
+      } catch (error) {
+        return error;
+      }
+    }  
+
+    const postMethod = async(url,param) => {
+      try {
+        const resposne = await fetch(url , {
+          method : "POST",
+          headers : {
+            "content-type" : "application/json"
+          }, 
+          body : JSON.stringify(param)
+        });
+        console.log("response object details : ",resposne);
+        if(!resposne.ok) {
+          throw new Error(await resposne.json());
+        }
+        const result = await resposne.json();
+        return result; 
+      } catch (error) {
+        return error;
+      }
+    }  
+
+    function fetchStudentDetails() {
+
+    }
     const exams = [
       { name: "Java", score: 85 },
       { name: "JavaScript", score: 80 },
