@@ -121,15 +121,13 @@
           throw new Error(await resposne.json());
         }
         const result = await resposne.json();
+        console.log(result);
         return result; 
       } catch (error) {
         return error;
       }
     }  
 
-    function fetchStudentDetails() {
-
-    }
     const exams = [
       { name: "Java", score: 85 },
       { name: "JavaScript", score: 80 },
@@ -141,22 +139,34 @@
 
     const examList = document.getElementById("examList");
 
-    exams.forEach(exam => {
-      const col = document.createElement("div");
-      col.className = "col-sm-6 col-md-4 col-lg-3";
+    async function fetchAllSubjectList() {
+      let student_id = document.getElementById("student_id").value;
+      const response = await postMethod("/fetchAllSubjectList", {"student_id" : student_id });
+      if (response.success) {
+        const subject_lists = response.message;
+        for (const key in subject_lists) {
+          const col = document.createElement("div");
+          col.className = "col-sm-6 col-md-4 col-lg-3";
+          
+          col.innerHTML = `
+            <div class="card shadow-sm h-100 text-center p-3">
+              <div class="card-body">
+                <h5 class="card-title">${subject_lists[key].subject_name}(${subject_lists[key].subject_code})</h5>
+                <p class="card-text text-secondary mb-3">Score: <strong>${subject_lists[key].student_marks}%</strong></p>
+                <button class="btn btn-outline-primary btn-sm">Start Exam</button>
+              </div>
+            </div>
+          `;
 
-      col.innerHTML = `
-        <div class="card shadow-sm h-100 text-center p-3">
-          <div class="card-body">
-            <h5 class="card-title">${exam.name}</h5>
-            <p class="card-text text-secondary mb-3">Score: <strong>${exam.score}%</strong></p>
-            <button class="btn btn-outline-primary btn-sm">Start Exam</button>
-          </div>
-        </div>
-      `;
+          examList.appendChild(col); 
+      }
+      } else {
+        console.log(response.message);
+        alert(response.message);
+      }
+    }
 
-      examList.appendChild(col);
-    });
+    fetchAllSubjectList();
   </script>
 </body>
 </html>
