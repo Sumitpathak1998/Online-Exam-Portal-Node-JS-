@@ -1,0 +1,158 @@
+* {
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    background: #f4f6f8;
+    margin: 0;
+    padding: 10px;
+}
+
+.exam-container {
+    max-width: 1200px;
+    margin: auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+/* Header */
+.exam-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    background: linear-gradient(90deg, #2563eb, #1e40af);
+    color: #fff;
+}
+
+.exam-header h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.timer {
+    font-size: 18px;
+    background: rgba(255,255,255,0.2);
+    padding: 8px 14px;
+    border-radius: 6px;
+}
+
+/* Body Layout */
+.exam-body {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+}
+
+/* Question List */
+.question-list {
+    width: 220px;
+    background: #f9fafb;
+    border-radius: 10px;
+    padding: 15px;
+    border: 1px solid #e5e7eb;
+}
+
+.question-list h4 {
+    margin-bottom: 10px;
+}
+
+.question-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.question-list li {
+    padding: 10px;
+    margin-bottom: 8px;
+    background: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid #e5e7eb;
+    transition: 0.2s;
+}
+
+.question-list li.active,
+.question-list li:hover {
+    background: #2563eb;
+    color: #fff;
+}
+
+/* Question Panel */
+.question-panel {
+    flex: 1;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 25px;
+    border: 1px solid #e5e7eb;
+}
+
+.question-panel h3 {
+    margin-top: 0;
+    font-size: 20px;
+}
+
+/* Options */
+.options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.option {
+    padding: 15px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.option:hover {
+    border-color: #2563eb;
+    background: #eff6ff;
+}
+
+/* Footer Buttons */
+.exam-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+    gap: 1%;
+}
+
+.body-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 20px;
+}
+.btn {
+    padding: 8px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.btn-prev {
+    background: #9ca3af;
+    color: #fff;
+}
+
+.btn-next {
+    background: #2563eb;
+    color: #fff;
+}
+
+.btn-submit {
+    background: #16a34a;
+    color: #fff;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}

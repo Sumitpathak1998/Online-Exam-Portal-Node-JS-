@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Online Exam UI</title>
+    <link rel="stylesheet" href="/exam_page.css">
+</head>
+<body>
+
+<div class="exam-container">
+    <!-- Header -->
+    <div class="exam-header">
+        <h2>Subject Name: {{subject_name}}</h2>
+        <div id="subject_id" style="display:none">{{subject_id}}</div>
+        <div class="timer">⏱ <span id="clock_time">{{time}}</span> left</div>
+    </div>
+    <!-- Body -->
+    <div class="exam-body">
+        <!-- Question List -->
+        <div class="question-list">
+            <h4>Questions</h4>
+            <ul id="question_list_tab"></ul>
+        </div>
+        <!-- Question Panel -->
+        <div class="question-panel">
+            <h3 id="question_details"></h3>
+            <p>Select the correct answer from the options below.</p>
+
+            <div class="options" id="options_tab">
+                <div class="option" id="option_1"></div>
+                <div class="option" id="option_2"></div>
+                <div class="option" id="option_3"></div>
+                <div class="option" id="option_4"></div>
+            </div>
+            <div class="exam-footer">
+                <button class="btn btn-prev">Previous</button>
+                <button class="btn btn-next">Next</button>
+                <div></div>
+            </div>
+        </div>
+    </div>
+    <!-- Body Footer-->
+    <div class="body-footer">
+        <button class="btn btn-submit">Submit</button>
+    </div>
+</div>
+
+<script type="text/javaScript">
+
+let question_list = {};
+document.addEventListener("DOMContentLoaded", async () => {
+    question_list = await fetchSubjectQuestion();
+    if(question_list != null) {
+        let question_ids = Object.keys(question_list);
+        creatLeftTab(question_ids);
+        createQuestionPanel(question_ids[0],question_list[question_ids[0]]);
+    }
+});
+
+function creatLeftTab(question_ids) {
+    let ul = document.getElementById("question_list_tab");
+    question_ids.forEach((question_id,index) => {
+        let li = document.createElement("li");
+        if( (index+1) == 1) {
+            li.classList.add("active");
+        }
+        li.id = question_id;
+        li.innerHTML = ` ${index+1}. Question`;
+        li.addEventListener("click", () => {
+            loadSelectQuestion(question_id);
+        });
+        ul.insertAdjacentElement("beforeend", li);
+    });
+}
+
+function createQuestionPanel(question_id,question_details) {
+    console.log(question_details);
+    Object.entries(question_details).forEach(([key,value]) => {
+        console.log(document.getElementById(key));
+        document.getElementById(key).textContent = String (value);
+    });
+}
+
+function loadSelectQuestion(question_id) {
+    Array.from(document.getElementById("question_list_tab").querySelectorAll("li")).forEach(param => {
+        param.classList.toggle("active", param.id == question_id)
+    });
+    createQuestionPanel(question_id,question_list[question_id]);
+}
+
+async function fetchSubjectQuestion() {
+    const subject_id = document.getElementById("subject_id").innerHTML;
+    let url = `/fetchSubjectQuestionDetails/${subject_id}`;
+    try {
+        const response = await fetch( url, {
+            method : "GET" , 
+        });
+        if(!response.ok) {
+            throw new Error(await response.text());
+        }
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        return null;
+    }
+}
+
+setInterval(() => {
+    let clock_time = document.getElementById("clock_time").innerHTML;
+    let [min,sec] = clock_time.split(":").map(param => Number(param));
+    if(sec == 0) {
+        sec = 59;
+        --min;
+    } else {
+        --sec;
+    }
+    document.getElementById("clock_time").innerHTML = [String (min).padStart(2,"0"),String (sec).padStart(2,"0")].join(":");
+}, 1000);
+</script>
+
+</body>
+</html>
