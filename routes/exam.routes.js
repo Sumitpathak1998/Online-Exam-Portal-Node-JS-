@@ -11,7 +11,5 @@ export const examRoutes = (req,res) => {
             const subject_id = req.url.split("/").filter(param => param)[1];
             fetchSubjectQuestionDetails(req,res,subject_id);
         }
-    } else  {
-        
-    }
+    } else  {}
 }
