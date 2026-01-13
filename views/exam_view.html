@@ -111,7 +111,9 @@ function changeActive(question_id) {
 
 function onSelectOption(option_id,question_id) {
     question_list[question_id]['selected_option'] = option_id;
-    document.getElementById(option_id).classList.add("option-select");
+    document.querySelectorAll("#options_tab div").forEach((div) => {
+        div.classList.toggle("option-select" , div.id == option_id)
+    });
 }
 
 // this function execute when click submit and when the time is over 
