@@ -1,4 +1,4 @@
-import {loadExamPage , loadExamPageCss , fetchSubjectQuestionDetails} from "../controller/exam.controller.js";
+import {loadExamPage , loadExamPageCss , fetchSubjectQuestionDetails , submitExamForm} from "../controller/exam.controller.js";
 
 export const examRoutes = (req,res) => {
     if(req.method == "GET") {
@@ -11,5 +11,9 @@ export const examRoutes = (req,res) => {
             const subject_id = req.url.split("/").filter(param => param)[1];
             fetchSubjectQuestionDetails(req,res,subject_id);
         }
-    } else  {}
+    } else  {
+        if(req.url == "/submitExamForm") {
+            submitExamForm(req,res);
+        }
+    }
 }

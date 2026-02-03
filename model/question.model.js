@@ -69,4 +69,15 @@ export const removeQuestion = async (id) => {
     } catch (error) {
         return {success : false , message : error.message};
     }
-} 
+}
+
+export const getListOfQuestionSelectedOption = async (question_ids) => {
+    try {
+        let ids = question_ids.join(",");
+        const [data] = await db.execute(`select id , right_option from online_exam_portal.question where id in ( ${ids} )`);
+        console.log(data);
+        return {success : true , message : data};
+    } catch (error) {
+        return {success : false , message : error.message};
+    }
+}

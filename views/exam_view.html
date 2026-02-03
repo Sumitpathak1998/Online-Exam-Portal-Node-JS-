@@ -26,11 +26,11 @@
             <h3 id="question_details"></h3>
             <p>Select the correct answer from the options below.</p>
 
-            <div class="options" id="options_tab">
-                <div class="option" id="option_1" onclick="onSelectOption(this.id,this.dataset.value)"></div>
-                <div class="option" id="option_2" onclick="onSelectOption(this.id,this.dataset.value)"></div>
-                <div class="option" id="option_3" onclick="onSelectOption(this.id,this.dataset.value)"></div>
-                <div class="option" id="option_4" onclick="onSelectOption(this.id,this.dataset.value)"></div>
+            <div class="options" id="options_tab" onclick="onSelectOption(event)">
+                <div class="option" id="option_1" ></div>
+                <div class="option" id="option_2" ></div>
+                <div class="option" id="option_3" ></div>
+                <div class="option" id="option_4" ></div>
             </div>
             <div class="exam-footer">
                 <button class="btn btn-prev" id="toprev" onclick="moveQuestion(this.id,this.dataset.value)">Previous</button>
@@ -40,7 +40,7 @@
     </div>
     <!-- Body Footer-->
     <div class="body-footer">
-        <button class="btn btn-submit">Submit</button>
+        <button class="btn btn-submit" onclick="onSubmitExam(1)">Submit</button>
     </div>
 </div>
 
@@ -73,9 +73,11 @@ function creatLeftTab(question_ids) {
 }
 
 function createQuestionPanel(question_id,question_details) {
+    removeSelectClass();
     Object.entries(question_details).forEach(([key,value]) => {
         if (key == "selected_option") {
-            document.getElementById(key).classList.add("option-select");
+            console.log(document.getElementById(value));
+            document.getElementById(value).classList.add("option-select");
         } else {
             document.getElementById(key).textContent = String (value);
             document.getElementById(key).setAttribute("data-value", question_id);
@@ -83,6 +85,14 @@ function createQuestionPanel(question_id,question_details) {
     });
     document.getElementById("toprev").setAttribute("data-value", question_id);
     document.getElementById("tonext").setAttribute("data-value", question_id);
+}
+
+function removeSelectClass() {
+    document.querySelectorAll("#options_tab div").forEach((div) => {
+        if(div.classList.contains("option-select")) {
+            div.classList.remove("option-select");
+        }
+    });
 }
 
 // function handle the move question part from next and prev button 
@@ -109,7 +119,9 @@ function changeActive(question_id) {
     );
 }
 
-function onSelectOption(option_id,question_id) {
+function onSelectOption(event) {
+    let target_option = event.target;
+    const [option_id,question_id] = [target_option.id,target_option.dataset.value];
     question_list[question_id]['selected_option'] = option_id;
     document.querySelectorAll("#options_tab div").forEach((div) => {
         div.classList.toggle("option-select" , div.id == option_id)
@@ -120,19 +132,43 @@ function onSelectOption(option_id,question_id) {
 /**
  * required data in this way 
  * {
-     "student_id" : "23",
      "subject_id" : "12",
      "exam_performance" : {
          question_id : selcted_option
      }
     }
  */
-function onSubmitExam() {
-    const exam_performance = Object.entries(question).reduce((acc,[id,exam]) => {
-        acc[id] = (exam['select_option']) ? exam['select_option'] : null;
-        return acc;
-    } ,{});
-    // Add student_id and subject_id then pass this response
+async function onSubmitExam(flg) {
+    if(flg == 1) {
+        const isConfirmed = confirm("Are you sure you want to submit the exam?\nYou cannot change answers after submission.");
+        if(!isConfirmed) return; 
+    } else {
+        alert("Your time is over, Thanks !");
+        return;
+    }
+    try {
+        let questions = {};
+        for (const question_id in question_list) {
+            questions[question_id] = (question_list[question_id].selected_option != undefined ) ?  question_list[question_id].selected_option : null;
+        }
+        const subject_id = document.getElementById("subject_id").innerHTML;
+        const final_obj = {questions,subject_id};
+        const response = await fetch("/submitExamForm" , {
+            method : "POST" , 
+            headers : {
+                "content-type" : "application/json"
+            },
+            body : JSON.stringify(final_obj)
+        });
+        if(!response.ok) {
+            return await response.text();
+        } 
+        let result = await response.json();
+        alert(result.message);
+        // Work remain send the control back of student login page with exam info
+    } catch (error) {
+        alert(error.message);
+    }
 }
 
 function loadSelectQuestion(question_id) {
@@ -168,8 +204,12 @@ setInterval(() => {
     } else {
         --sec;
     }
+    if(min == 9 && sec == 53) {
+        onSubmitExam(0);
+    }
     document.getElementById("clock_time").innerHTML = [String (min).padStart(2,"0"),String (sec).padStart(2,"0")].join(":");
 }, 1000);
+
 </script>
 
 </body>
