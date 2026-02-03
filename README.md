@@ -20,7 +20,10 @@ Any of that student click then test will start for 10min
   - Always four option present 
 
 4) Once user submit the test or time complete then close that test and show the result 
-  - and then refer back to home page;
+  - and then refer back to home page with the Marks show there;
+
+5) Student can only appear the exam for 3 time and after that he/she will not appear the exam.That marks consider as final marks.
+- Add the number of attemp in the exam table. it increase on the basis of student_id and subject_id.
 
 After the data base these things are add 
 

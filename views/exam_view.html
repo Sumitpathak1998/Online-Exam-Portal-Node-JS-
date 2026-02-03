@@ -40,7 +40,7 @@
     </div>
     <!-- Body Footer-->
     <div class="body-footer">
-        <button class="btn btn-submit">Submit</button>
+        <button class="btn btn-submit" onclick="onSubmitExam(1)">Submit</button>
     </div>
 </div>
 
@@ -74,7 +74,6 @@ function creatLeftTab(question_ids) {
 
 function createQuestionPanel(question_id,question_details) {
     removeSelectClass();
-    console.log(question_details);
     Object.entries(question_details).forEach(([key,value]) => {
         if (key == "selected_option") {
             console.log(document.getElementById(value));
@@ -133,19 +132,43 @@ function onSelectOption(event) {
 /**
  * required data in this way 
  * {
-     "student_id" : "23",
      "subject_id" : "12",
      "exam_performance" : {
          question_id : selcted_option
      }
     }
  */
-function onSubmitExam() {
-    const exam_performance = Object.entries(question).reduce((acc,[id,exam]) => {
-        acc[id] = (exam['select_option']) ? exam['select_option'] : null;
-        return acc;
-    } ,{});
-    // Add student_id and subject_id then pass this response
+async function onSubmitExam(flg) {
+    if(flg == 1) {
+        const isConfirmed = confirm("Are you sure you want to submit the exam?\nYou cannot change answers after submission.");
+        if(!isConfirmed) return; 
+    } else {
+        alert("Your time is over, Thanks !");
+        return;
+    }
+    try {
+        let questions = {};
+        for (const question_id in question_list) {
+            questions[question_id] = (question_list[question_id].selected_option != undefined ) ?  question_list[question_id].selected_option : null;
+        }
+        const subject_id = document.getElementById("subject_id").innerHTML;
+        const final_obj = {questions,subject_id};
+        const response = await fetch("/submitExamForm" , {
+            method : "POST" , 
+            headers : {
+                "content-type" : "application/json"
+            },
+            body : JSON.stringify(final_obj)
+        });
+        if(!response.ok) {
+            return await response.text();
+        } 
+        let result = await response.json();
+        alert(result.message);
+        // Work remain send the control back of student login page with exam info
+    } catch (error) {
+        alert(error.message);
+    }
 }
 
 function loadSelectQuestion(question_id) {
@@ -181,8 +204,12 @@ setInterval(() => {
     } else {
         --sec;
     }
+    if(min == 9 && sec == 53) {
+        onSubmitExam(0);
+    }
     document.getElementById("clock_time").innerHTML = [String (min).padStart(2,"0"),String (sec).padStart(2,"0")].join(":");
 }, 1000);
+
 </script>
 
 </body>

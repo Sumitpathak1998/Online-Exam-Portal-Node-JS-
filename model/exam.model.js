@@ -14,3 +14,13 @@ export const getQuestionDetailsOnSbjectBasis = async (subject_id) => {
         return { success : false , message : error};
     }
 }
+
+export const storeExamDetails = async (...exam_details) => {
+    try {
+        const [data] = await db.execute("insert into online_exam_portal.exam (student_id,subject_id,marks) values(?,?,?)", exam_details);
+        console.log(data);
+        return {success : true , message : "Exam Completed Successfully"};
+    } catch (error) {
+        return {success : false , message : error.message};
+    }
+}
