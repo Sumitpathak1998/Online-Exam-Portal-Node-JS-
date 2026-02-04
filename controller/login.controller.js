@@ -9,6 +9,10 @@ export const submitLoginRequest = async (req,res) => {
         let loginDetails = JSON.parse(body);
         let loginResponse = await checkLoginDetails(loginDetails)
         if(loginResponse.success) {
+            res.setHeader("Set-Cookie" , [
+                "isLoggedIn=true; path = /;",
+                `student_id = ${loginResponse.user_id};path=/;`
+            ] );
             res.writeHead(200, { "Content-Type": "application/json" });
             return res.end(JSON.stringify({ success: true, message: "Login Successfully"  , user_id : loginResponse.user_id}));
         } else {
