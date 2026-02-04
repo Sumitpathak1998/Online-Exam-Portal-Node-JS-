@@ -3,6 +3,7 @@ import path from "path";
 import {getSubjectDetails} from "../model/subject.model.js";
 import {getQuestionDetailsOnSbjectBasis , storeExamDetails} from "../model/exam.model.js";
 import { getListOfQuestionSelectedOption } from "../model/question.model.js";
+import { cookieDetails } from "../model/dbConnection.js";
 
 export const loadExamPage = async (req,res,subject_id) => {
     try {
@@ -73,7 +74,9 @@ export const submitExamForm = async (req,res) => {
 
             const marks = (total_right_option/(question_ids.length))* 100;
 
-            const response = await storeExamDetails(10,exam_performance.subject_id,marks);
+            let cookie_info = cookieDetails(req);
+            const logged_student = cookie_info.student_id;
+            const response = await storeExamDetails(logged_student,exam_performance.subject_id,marks);
             if(response.success) {
                 res.writeHead(200, { "Content-Type": "application/json" });
                 return res.end(JSON.stringify({ success: true, message: "Exam Completed"}));

@@ -20,3 +20,11 @@ const connectDB = async() => {
 }
 
 export const db = await connectDB();
+
+export const cookieDetails = (req) => {
+    return req.headers.cookie.split(";").reduce((acc,v) => {
+        let [key,val] = (v.trim()).split("=");
+        acc[key] = val;
+        return acc;
+    } , {});
+}
