@@ -144,7 +144,6 @@ async function onSubmitExam(flg) {
         if(!isConfirmed) return; 
     } else {
         alert("Your time is over, Thanks !");
-        return;
     }
     try {
         let questions = {};
@@ -204,7 +203,7 @@ setInterval(() => {
     } else {
         --sec;
     }
-    if(min == 9 && sec == 53) {
+    if(min == 0 && sec == 0) {
         onSubmitExam(0);
     }
     document.getElementById("clock_time").innerHTML = [String (min).padStart(2,"0"),String (sec).padStart(2,"0")].join(":");
